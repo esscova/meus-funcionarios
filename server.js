@@ -30,7 +30,7 @@ app.post('/colaboradores', async (req,res) => {
     const {nome, email, cargo, status} = req.body;
 
     if(!nome || !email){
-        return res.send(`<div><p>Preencha todos os campos!</p></div>`)
+        return res.send(`<div style='background-color: rgba(255,102,102,0.8); position: absolute; top:24px; right: 24px; padding: 4px 24px; border-radius:4px'><p style='color:#fff'>Preencha todos os campos!</p></div>`)
     }
     
     try{
@@ -40,11 +40,13 @@ app.post('/colaboradores', async (req,res) => {
             cargo,
             status: status ? true : false
         })
-        return res.send(`<div><p>Colaborador cadastrado com sucesso!</p></div>`);
+        
+        return res.send(`<div style='background-color: rgba(0,202,32,0.8); position: absolute; top:24px; right: 24px; padding: 4px 24px; border-radius:4px'><p style='color:#fff'>Funcionário registrado com sucesso!</p></div>`);
 
     }catch(err){
         console.log(err);
-        return res.send(`<div><p>Erro ao registrar colaborador</p></div>`);
+        
+        return res.send(`<div style='background-color: rgba(255,102,102,0.8); position: absolute; top:24px; right: 24px; padding: 4px 24px; border-radius:4px'><p style='color:#fff'>Erro ao cadastrar...</p></div>`);
     }
 
     res.send('its works');
