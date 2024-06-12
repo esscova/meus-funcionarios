@@ -64,21 +64,46 @@ app.get('/colaboradores', async (req, res)=>{
 
                 <div style='position:absolute; top:14px; right:14px'>
                     <button style='background-color:#121212; padding:0 8px; color:#fff'>Editar</button>
-                    <button style='background-color:#ef4444; padding:0 8px; color:#fff'>Deletar</button>
+                    <button style='background-color:#ef4444; padding:0 8px; color:#fff' onclick='handleDelete(${funcionario.id})'>Deletar</button>
                 </div>
             </div>
-        `).join('')
+        `).join('');
 
-        return res.send(html)
+        return res.send(html);
 
     } catch (error) {
         console.log(error);
         return res.send(`<div style='background-color: rgba(255,102,102,0.8); position: absolute; top:24px; right: 24px; padding: 4px 24px; border-radius:4px'><p style='color:#fff'>Erro ao buscar dados...</p></div>`);
     }
-})
+});
+
+app.delete('/colaboradores/:id', async(req,res) => {
+    
+    const id = req.params.id;
+    
+    if(!id){
+        return res.send("<div style='background-color: rgba(255,102,102,0.8); position: absolute; top:24px; right: 24px; padding: 4px 24px; border-radius:4px'><p style='color:#fff'>Erro ao buscar dados...</p></div>");
+    }
+
+    try {
+        const funcionario = await Employee.findByPk(id);
+        
+        if(!funcionario){
+            return res.status(400).send("<div style='background-color: rgba(255,102,102,0.8); position: absolute; top:24px; right: 24px; padding: 4px 24px; border-radius:4px'><p style='color:#fff'>Erro ao buscar dados...</p></div>");
+        }
+
+        await funcionario.destroy();
+
+        return res.send("<div style='background-color: rgba(0,202,32,0.8); position: absolute; top:24px; right: 24px; padding: 4px 24px; border-radius:4px'><p style='color:#fff'>Funcionário deletado com sucesso!</p></div>");
+
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send("<div style='background-color: rgba(255,102,102,0.8); position: absolute; top:24px; right: 24px; padding: 4px 24px; border-radius:4px'><p style='color:#fff'>Erro ao buscar dados...</p></div>");
+    }
+});
 
 sequelize.sync().then(() => {
     app.listen(port, () => {
         console.log(`Server Online - url http://localhost:${port}`)
-    })
-})
+    });
+});

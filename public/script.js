@@ -3,10 +3,15 @@ document.addEventListener('htmx:afterRequest', async function(event){
         await fetchFuncionarios();
         document.querySelector('#form-funcionarios').reset();
     }
-})
+});
 
 async function fetchFuncionarios(){
-    await htmx.ajax('GET', 'http://localhost:3333/colaboradores', '#lista-funcionarios')
+    await htmx.ajax('GET', 'http://localhost:3333/colaboradores', '#lista-funcionarios');
+}
+
+async function handleDelete(id){
+     await htmx.ajax('DELETE', `http://localhost:3333/colaboradores/${id}`, '#toast');
+     await fetchFuncionarios();
 }
 
 document.addEventListener('htmx:configRequest', function(event){
