@@ -63,8 +63,27 @@ app.get('/colaboradores', async (req, res)=>{
                 <p style='color:#000'> Status: ${funcionario.status ? "<span style='background-color:#039e00; padding:0px 8px;'> Ativo </span>":"<span style='background-color:#bf0d02; padding:0px 8px; color:#fff'> Inativo </span>"}</p>
 
                 <div style='position:absolute; top:14px; right:14px'>
-                    <button style='background-color:#121212; padding:0 8px; color:#fff'>Editar</button>
-                    <button style='background-color:#ef4444; padding:0 8px; color:#fff' onclick='handleDelete(${funcionario.id})'>Deletar</button>
+                    <button 
+                        style='background-color:#121212; 
+                        padding:0 8px; 
+                        color:#fff' 
+                        onclick="handleEdit(
+                            ${funcionario.id},
+                            '${funcionario.nome}', 
+                            '${funcionario.email}', 
+                            '${funcionario.cargo}', 
+                            '${funcionario.status}'
+                        )"
+                        >
+                        Editar
+                    </button>
+                    <button 
+                        style='background-color:#ef4444; 
+                        padding:0 8px; color:#fff' 
+                        onclick='handleDelete(${funcionario.id})'
+                        >
+                        Deletar
+                    </button>
                 </div>
             </div>
         `).join('');
@@ -100,6 +119,12 @@ app.delete('/colaboradores/:id', async(req,res) => {
         console.log(error);
         return res.status(400).send("<div style='background-color: rgba(255,102,102,0.8); position: absolute; top:24px; right: 24px; padding: 4px 24px; border-radius:4px'><p style='color:#fff'>Erro ao buscar dados...</p></div>");
     }
+});
+
+app.put('/colaboradores', async(req, res) => {
+    const{id, nome, email, cargo, status} = req.body;
+    console.log(req.body);
+    res.send('ok');
 });
 
 sequelize.sync().then(() => {
