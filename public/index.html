@@ -134,8 +134,22 @@
         </form>
 
         <div class="w-full max-w-3xl mx-auto mt-6">
+            <input 
+                class="w-full p-2 rounded"
+                type="text"
+                placeholder="Digite o nome do funcionário que está procurando..."
+                name="search"
+                id="search"
+                hx-get="/search"
+                hx-trigger="keyup delay:400ms"
+                hx-target="#lista-funcionarios" 
+                />
+        </div>
+        
+        <div class="w-full max-w-3xl mx-auto mt-6">
             <div id="lista-funcionarios" hx-get="/colaboradores" hx-trigger="load"></div>
         </div>
+    
     </div>
 
 </body>

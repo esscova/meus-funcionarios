@@ -150,6 +150,101 @@ app.put('/colaboradores', async(req, res) => {
     
 });
 
+app.get('/search', async(req,res) => {
+    const nome = req.query.search;
+
+    if(!nome || nome === ''){
+        const funcionarios = await Employee.findAll();
+        let html = funcionarios.map((funcionario)=> `
+            <div style='background-color:#fafafa; padding:8px; border-radius:8px; margin-bottom:14px; position:relative' >
+                <strong style='color:#000; font-size:20px;'>${funcionario.nome}</strong>
+                <p style='color:#000'> Email: ${funcionario.email}</p>
+                <p style='color:#000'> Cargo: ${funcionario.cargo}</p>
+                <p style='color:#000'> Status: ${funcionario.status ? "<span style='background-color:#039e00; padding:0px 8px;'> Ativo </span>":"<span style='background-color:#bf0d02; padding:0px 8px; color:#fff'> Inativo </span>"}</p>
+
+                <div style='position:absolute; top:14px; right:14px'>
+                    <button 
+                        style='background-color:#121212; 
+                        padding:0 8px; 
+                        color:#fff' 
+                        onclick="handleEdit(
+                            ${funcionario.id},
+                            '${funcionario.nome}', 
+                            '${funcionario.email}', 
+                            '${funcionario.cargo}', 
+                            '${funcionario.status}'
+                        )"
+                        >
+                        Editar
+                    </button>
+                    <button 
+                        style='background-color:#ef4444; 
+                        padding:0 8px; color:#fff' 
+                        onclick='handleDelete(${funcionario.id})'
+                        >
+                        Deletar
+                    </button>
+                </div>
+            </div>
+        `).join('');
+
+        return res.send(html);
+    }
+
+    try {
+        const funcionarios = await Employee.findAll({
+            where :{
+                nome:{
+                    [Sequelize.Op.like]:`%${nome}%`
+                }
+            }
+        });
+        
+        if(funcionarios.length === 0){
+            return res.send('<p style="color:#fff">Funcionário não existe no nosso banco de dados</p>');
+        }
+
+        let html = funcionarios.map((funcionario)=> `
+            <div style='background-color:#fafafa; padding:8px; border-radius:8px; margin-bottom:14px; position:relative' >
+                <strong style='color:#000; font-size:20px;'>${funcionario.nome}</strong>
+                <p style='color:#000'> Email: ${funcionario.email}</p>
+                <p style='color:#000'> Cargo: ${funcionario.cargo}</p>
+                <p style='color:#000'> Status: ${funcionario.status ? "<span style='background-color:#039e00; padding:0px 8px;'> Ativo </span>":"<span style='background-color:#bf0d02; padding:0px 8px; color:#fff'> Inativo </span>"}</p>
+
+                <div style='position:absolute; top:14px; right:14px'>
+                    <button 
+                        style='background-color:#121212; 
+                        padding:0 8px; 
+                        color:#fff' 
+                        onclick="handleEdit(
+                            ${funcionario.id},
+                            '${funcionario.nome}', 
+                            '${funcionario.email}', 
+                            '${funcionario.cargo}', 
+                            '${funcionario.status}'
+                        )"
+                        >
+                        Editar
+                    </button>
+                    <button 
+                        style='background-color:#ef4444; 
+                        padding:0 8px; color:#fff' 
+                        onclick='handleDelete(${funcionario.id})'
+                        >
+                        Deletar
+                    </button>
+                </div>
+            </div>
+        `).join('');
+
+        return res.send(html);
+
+    } catch (error) {
+        console.log(error);
+        return res.send('<p>Erro ao buscar colaborador>/p>');
+    }
+});
+
 sequelize.sync().then(() => {
     app.listen(port, () => {
         console.log(`Server Online - url http://localhost:${port}`)
