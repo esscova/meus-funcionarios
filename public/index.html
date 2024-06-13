@@ -72,7 +72,8 @@
         <form 
             id="form-edit-funcionarios"
             class="bg-slate-100 w-full max-w-3xl mx-auto p-4 rounded hidden flex-col justify-center items-center gap-4"
-            
+            hx-put="/colaboradores"
+            hx-target="#toast"
             >
 
             <input type="hidden" name="id" id="id-funcionario"/>

@@ -3,6 +3,11 @@ document.addEventListener('htmx:afterRequest', async function(event){
         await fetchFuncionarios();
         document.querySelector('#form-funcionarios').reset();
     }
+
+    if(event.target.getAttribute('id') === 'form-edit-funcionarios'){
+        await fetchFuncionarios();
+        handleCancelEdit();
+    }
 });
 
 async function fetchFuncionarios(){

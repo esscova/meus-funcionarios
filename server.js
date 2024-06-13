@@ -123,8 +123,31 @@ app.delete('/colaboradores/:id', async(req,res) => {
 
 app.put('/colaboradores', async(req, res) => {
     const{id, nome, email, cargo, status} = req.body;
-    console.log(req.body);
-    res.send('ok');
+    
+    if(!id || !nome || !email){
+        return res.send("<div style='background-color: rgba(255,102,102,0.8); position: absolute; top:24px; right: 24px; padding: 4px 24px; border-radius:4px'><p style='color:#fff'>Erro ao salvar alterações...</p></div>");
+    }
+
+    try {
+    
+        const funcionario = await Employee.findByPk(id);
+        if(!funcionario){
+            return res.send("<div style='background-color: rgba(255,102,102,0.8); position: absolute; top:24px; right: 24px; padding: 4px 24px; border-radius:4px'><p style='color:#fff'>Erro ao salvar alterações...</p></div>");
+        }
+
+        await funcionario.update({
+            nome,
+            email,
+            cargo,
+            status: status ? true : false
+        });
+        return res.send("<div style='background-color: rgba(0,202,32,0.8); position: absolute; top:24px; right: 24px; padding: 4px 24px; border-radius:4px'><p style='color:#fff'>Dados alterados com sucesso!</p></div>");
+
+    } catch (error) {
+        console.log(error);
+        return res.send("<div style='background-color: rgba(255,102,102,0.8); position: absolute; top:24px; right: 24px; padding: 4px 24px; border-radius:4px'><p style='color:#fff'>Erro ao salvar alterações...</p></div>");
+    }
+    
 });
 
 sequelize.sync().then(() => {
